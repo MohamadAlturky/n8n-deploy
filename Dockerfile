@@ -27,14 +27,14 @@ WORKDIR /home/node
 COPY --from=build /usr/local/lib/node_modules/n8n /usr/local/lib/node_modules/n8n
 COPY --from=build /usr/local/bin/n8n /usr/local/bin/n8n
 
-# Create a dedicated user and group for n8n to run with less privileges
-RUN addgroup -g 1000 node \
-    && adduser -u 1000 -G node -s /bin/sh -D node \
-    && mkdir -p ${N8N_DATA_FOLDER} \
+# Create the N8N_DATA_FOLDER and ensure the 'node' user owns it.
+# The 'node' user and group already exist in the node:18-alpine base image.
+RUN mkdir -p ${N8N_DATA_FOLDER} \
     && chown -R node:node ${N8N_DATA_FOLDER} \
     && chown -R node:node /usr/local/lib/node_modules/n8n \
     && chown -R node:node /usr/local/bin/n8n
 
+# Switch to the 'node' user to run the application with less privileges
 USER node
 
 # Expose the port n8n runs on
