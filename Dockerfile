@@ -13,6 +13,7 @@ WORKDIR /usr/app
 # Let's assume you want n8n installed for a more standard setup.
 RUN npm install -g n8n@latest
 
+RUN ls -la
 # Expose the port n8n runs on
 EXPOSE 5678
 
@@ -20,4 +21,3 @@ EXPOSE 5678
 # This will execute 'npx n8n' within the container.
 # If n8n was installed globally, this will use that installation.
 CMD ["n8n"]
-# fixed the cookie issue
