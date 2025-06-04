@@ -17,7 +17,8 @@ ENV N8N_HOST=0.0.0.0
 ENV N8N_PORT=5678
 ENV N8N_PROTOCOL=http
 ENV N8N_DATA_FOLDER=/home/node/.n8n
-ENV N8N_CONFIG_FILES_FOLDER=/home/node/.n8n # Often the same as DATA_FOLDER
+ENV N8N_CONFIG_FILES_FOLDER=/home/node/.n8n
+# N8N_CONFIG_FILES_FOLDER is often the same as N8N_DATA_FOLDER
 
 WORKDIR /home/node
 
