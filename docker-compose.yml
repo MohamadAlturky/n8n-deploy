@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  n8n:
+    # Use the image built from your Dockerfile
+    # If you're using a pre-built image from Docker Hub (e.g., n8n/n8n),
+    # replace 'build: .' with 'image: n8n/n8n'
+    build: .
+    restart: always
+    ports:
+      - "5678:5678" # Host_Port:Container_Port
+    volumes:
+      # This is the crucial part for persistence.
+      # It maps a named volume 'n8n_data' on your Docker host to the
+      # N8N_DATA_FOLDER inside the container.
+      - n8n_data:/home/node/.n8n
+      # You can also map a specific host directory if you prefer:
+      # - /path/to/your/n8n/data:/home/node/.n8n
+    environment:
+      # These environment variables configure n8n.
+      # It's highly recommended to use a database like PostgreSQL for production.
+      # For simplicity, we'll start with SQLite (default), but you should configure a database.
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - N8N_DATA_FOLDER=/home/node/.n8n
+      # Database configuration (uncomment and configure for production)
+      # - DB_TYPE=postgresdb
+      # - DB_POSTGRES_HOST=n8n_postgres
+      # - DB_POSTGRES_PORT=5432
+      # - DB_POSTGRES_DATABASE=n8n_db
+      # - DB_POSTGRES_USER=n8n_user
+      # - DB_POSTGRES_PASSWORD=your_strong_password
+      # Webhook URL (important if you use webhooks)
+      # - WEBHOOK_URL=https://your.n8n.domain.com/
+      # Timezone
+      - TZ=Europe/Amsterdam # Replace with your desired timezone
+      # N8N Encryption Key (IMPORTANT for production!)
+      # Generate a strong key: 'openssl rand -base64 32'
+      # - N8N_ENCRYPTION_KEY=your_secure_encryption_key_here
+      # Other n8n settings (e.g., custom nodes path)
+      # - N8N_CUSTOM_EXTENSIONS=/home/node/.n8n/custom_extensions
+
+    # Depends on postgres service if you uncomment the DB_TYPE and DB_POSTGRES settings
+    # depends_on:
+    #   - n8n_postgres
+
+  # Example PostgreSQL service (uncomment to use with n8n)
+  # n8n_postgres:
+  #   image: postgres:13
+  #   restart: always
+  #   environment:
+  #     POSTGRES_DB: n8n_db
+  #     POSTGRES_USER: n8n_user
+  #     POSTGRES_PASSWORD: your_strong_password
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+
+# Define the named volumes
+volumes:
+  n8n_data:
+  # postgres_data: # Uncomment if you use the PostgreSQL service
